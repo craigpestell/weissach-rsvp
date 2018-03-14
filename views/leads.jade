@@ -1,0 +1,64 @@
+extends layout
+
+block content
+  input(type="hidden", id="guests-json", value= JSON.stringify(guests) )
+  h1= title
+  p Event Registration
+  form(type='submit', method='post', action='/post')
+    select(name='guestList')
+      option(value='') Select a Value
+      -var index = 0
+      each guest in guests
+        option(value=guest[0], data-id="#{index++}") #{guest[2]}, #{guest[1]} - #{guest[3]}
+    br
+    label(for='guest')
+      | Guest  
+    br
+    input(name='guest', placeholder='Guest name(s)')
+    br
+    label(for='guestEmail')
+      | Email
+    br
+    input(name='guestEmail')
+    br
+    label(for='guestPhone')
+      | Phone
+    br
+    input(name='guestPhone')
+    br
+    label(for='owner')
+      | Owner?
+    input(name='owner', type='checkbox', value='YES')
+    br
+    label(for='area27')
+      | Area27?
+    input(name='area27', type='checkbox', value='YES')
+    br
+    label(for='notes')
+      | Notes
+    br
+    textarea(name='notes')
+    br
+    input(type='Submit')
+  script.
+    $(document).ready(function(){
+      var guestData = JSON.parse($('#guests-json').val());
+      console.log('select', $('select[name=guestList]'));
+      $('select[name=guestList]').change(function(val){
+        var row = parseInt($('select[name=guestList] option:selected').val()) + 9;
+        var c = guestData.filter(function(g){
+        console.log('g[0] - row', g[0] + ' - ' + row);
+          return parseInt(g[0])+9 == row;
+        });
+        console.log('row:', c);
+        var owner = (c[0][15])?true:false;
+        var area27 = (c[0][16])?true:false;
+        $('input[name=guest]').val(c[0][12]);
+        $('input[name=guestEmail]').val(c[0][13]);
+        $('input[name=guestPhone]').val(c[0][14]);
+        $('input[name=owner]').prop("checked", owner);
+        $('input[name=area27]').prop("checked", area27);
+        $('textarea[name=notes]').val(c[0][10]);
+      });
+    });
+

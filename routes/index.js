@@ -18,6 +18,13 @@ router.get('/hello', function(req, res){
   res.send('hello world');
 });
 
+router.get('/leads', function(req, res, next) {
+    var qs = require('../leads');
+    qs.init(function(leads){
+
+        res.render('leads', { title: 'Leads', guests: leads });
+    });
+});
 router.post('/post', function(req, res){
   if(req.body){
     console.log('req.body:', req.body);
