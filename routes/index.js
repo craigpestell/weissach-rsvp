@@ -18,13 +18,6 @@ router.get('/hello', function(req, res){
   res.send('hello world');
 });
 
-router.get('/leads', function(req, res, next) {
-    var qs = require('../leads');
-    qs.init(function(leads){
-
-        res.render('leads', { title: 'Leads', guests: leads });
-    });
-});
 router.post('/post', function(req, res){
   if(req.body){
     console.log('req.body:', req.body);
@@ -35,6 +28,26 @@ router.post('/post', function(req, res){
       res.render('index', { title: 'RSVP', guests: guests });
     });
   });
+
+});
+
+router.get('/leads', function(req, res, next) {
+    var qs = require('../leads');
+    qs.init(function(leads){
+
+        res.render('leads', { title: 'Leads', guests: leads });
+    });
+});
+router.post('/leads/post', function(req, res){
+    if(req.body){
+        console.log('req.body:', req.body);
+    }
+    var qs = require('../leads');
+    qs.writeGuest(req.body, function(){
+        qs.init(function(guests){
+            res.render('index', { title: 'RSVP', guests: guests });
+        });
+    });
 
 });
 

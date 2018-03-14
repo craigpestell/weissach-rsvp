@@ -113,7 +113,7 @@ function listGuests(auth, cb) {
     var sheets = google.sheets('v4');
     sheets.spreadsheets.values.get({
         auth: auth,
-        spreadsheetId: '1SGQ8dYRmhH3pJ5bceMijBCSkLF1vqNpBHJtSX4LE-NA',
+        spreadsheetId: '1vkuS3DgGbZGqWSz9-qF-tjxNQxPBPGKigmfASAfTgEk',
         range: 'B9:S500',
     }, function(err, response) {
         if (err) {
@@ -164,7 +164,7 @@ function writeGuest(data, cb){
 		    var area27 = (data.area27)?"YES":""; 
 	            sheets.spreadsheets.values.update({
                         auth: auth,
-                        spreadsheetId: '1SGQ8dYRmhH3pJ5bceMijBCSkLF1vqNpBHJtSX4LE-NA',
+                        spreadsheetId: '1vkuS3DgGbZGqWSz9-qF-tjxNQxPBPGKigmfASAfTgEk',
                         range: range,
                         valueInputOption: 'USER_ENTERED',
                         resource: {values: [[data.guest,data.guestEmail,data.guestPhone, owner, area27, data.notes, 'YES']]}

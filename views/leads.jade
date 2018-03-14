@@ -6,34 +6,52 @@ block content
   p Event Registration
   form(type='submit', method='post', action='/post')
     select(name='guestList')
-      option(value='') Select a Value
+      option(value='') New lead
       -var index = 0
       each guest in guests
         option(value=guest[0], data-id="#{index++}") #{guest[2]}, #{guest[1]} - #{guest[3]}
     br
-    label(for='guest')
-      | Guest  
+    label(for='firstName')
+      | Name
     br
-    input(name='guest', placeholder='Guest name(s)')
+    input(name='firstName', placeholder='First Name')
+     | &nbsp;
+    input(name='lastName', placeholder='Last Name')
     br
-    label(for='guestEmail')
-      | Email
-    br
-    input(name='guestEmail')
-    br
-    label(for='guestPhone')
+    label(for='phone')
       | Phone
     br
-    input(name='guestPhone')
+    input(name='phone')
     br
-    label(for='owner')
-      | Owner?
-    input(name='owner', type='checkbox', value='YES')
+    label(for='email')
+      | Email
+    input(name='phone')
     br
-    label(for='area27')
-      | Area27?
-    input(name='area27', type='checkbox', value='YES')
+    label(for='contactMethod')
+      | Preferred method of contact
+    input(name='contactMethod')
     br
+    label(for='currentVehicle')
+      | Current Vehicle
+    input(name='currentVehicle')
+    br
+    label(for='currentCustomer')
+      | Current Customer?
+    input(name='currentCustomer', type='checkbox', value='YES')
+    br
+    label(for='interestedVehicle')
+      | What car are you interested in?
+    input(name='interestedVehicle')
+    br
+    label(for='purchaseTimeline')
+      | Timeline / when are you looking to purchase
+    input(name='purchaseTimeline')
+    br
+    label(for='salesperson')
+      | Salesperson
+    input(name='Salesperson')
+    br
+
     label(for='notes')
       | Notes
     br
