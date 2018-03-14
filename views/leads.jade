@@ -3,19 +3,20 @@ extends layout
 block content
   input(type="hidden", id="guests-json", value= JSON.stringify(guests) )
   h1= title
-  p Event Registration
-  form(type='submit', method='post', action='/post')
-    select(name='guestList')
+  p Add or update a lead
+  form(type='submit', method='post', action='/leads/post')
+    select(name='lead')
       option(value='') New lead
       -var index = 0
-      each guest in guests
-        option(value=guest[0], data-id="#{index++}") #{guest[2]}, #{guest[1]} - #{guest[3]}
+      each lead in leads
+        option(value=leadt[0], data-id="#{index++}") #{lead[2]}, #{lead[1]} - #{lead[3]}
     br
     label(for='firstName')
       | Name
     br
     input(name='firstName', placeholder='First Name')
-     | &nbsp;
+    | &nbsp;
+    
     input(name='lastName', placeholder='Last Name')
     br
     label(for='phone')
@@ -25,14 +26,17 @@ block content
     br
     label(for='email')
       | Email
-    input(name='phone')
+    br
+    input(name='email')
     br
     label(for='contactMethod')
       | Preferred method of contact
+    br
     input(name='contactMethod')
     br
     label(for='currentVehicle')
       | Current Vehicle
+    br
     input(name='currentVehicle')
     br
     label(for='currentCustomer')
@@ -41,14 +45,17 @@ block content
     br
     label(for='interestedVehicle')
       | What car are you interested in?
+    br
     input(name='interestedVehicle')
     br
     label(for='purchaseTimeline')
       | Timeline / when are you looking to purchase
+    br
     input(name='purchaseTimeline')
     br
     label(for='salesperson')
       | Salesperson
+    br
     input(name='Salesperson')
     br
 

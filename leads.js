@@ -1,4 +1,3 @@
-console.log('requiring quickstart...');
 var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
@@ -21,7 +20,7 @@ function init(cb){
 	    }
 	    // Authorize a client with the loaded credentials, then call the
 	    // Google Sheets API.
-	    authorize(JSON.parse(content), listGuests, cb);
+	    authorize(JSON.parse(content), listLeads, cb);
 	});
 };
 
@@ -108,7 +107,7 @@ function storeToken(token) {
  * Print the names and majors of students in a sample spreadsheet:
  * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
  */
-function listGuests(auth, cb) {
+function listLeads(auth, cb) {
     console.log('listing majors...');
     var sheets = google.sheets('v4');
     sheets.spreadsheets.values.get({
@@ -122,28 +121,40 @@ function listGuests(auth, cb) {
         }
 	console.log('success...');
         var rows = response.values;
-        if (rows.length == 0) {
+        if (!rows || rows.length == 0) {
             console.log('No data found.');
+	    cb();
         } else {
-	    var guests = response.values.map(function(g,i){
+	    var leads = response.values.map(function(g,i){
 		g.unshift(i);
 		return g;
 	    });
-            guests = guests.filter(function(g){
+            leads = leads.filter(function(g){
 		return g[1];
 	    });
-	    guests = guests.sort(function(a,b){
+	    leads = leads.sort(function(a,b){
                 var A = a[2] + a[1];
 		var B = b[2] + b[1];
 		return A.toLowerCase().localeCompare(B.toLowerCase());
             });
-	    //console.log(guests);
-	    cb(guests);
+	    //console.log(leads);
+	    cb(leads);
         }
     });
 }
 
-function writeGuest(data, cb){
+function getFirstEmptyRow() {
+  var spr = SpreadsheetApp.getActiveSpreadsheet();
+  var column = spr.getRange('A:A');
+  var values = column.getValues(); // get all data in one call
+  var ct = 0;
+  while ( values[ct][0] != "" ) {
+    ct++;
+  }
+  return (ct);
+}
+
+function writeLead(data, cb){
 	// Load client secrets from a local file.
 	fs.readFile('client_secret.json', function processClientSecrets(err, content) {
 	    if (err) {
@@ -154,20 +165,21 @@ function writeGuest(data, cb){
 	    // Google Sheets API.
 	    authorize(JSON.parse(content), 
                 function(auth, cb){
-		    //var rangeEnd = parseInt(data.guestList) + 3;
-	            var rowNum = parseInt(data.guestList)+9;
-		    var range = 'RSVP List!M' + rowNum + ':S' + rowNum; 
+		    //var rangeEnd = parseInt(data.leadList) + 3;
+	            //var rowNum = parseInt(data.leadList)+9;
+		    var range = 'Leads!A4:K4';//'Leads!M' + rowNum + ':S' + rowNum; 
 		    console.log('range:', range);
 		    console.log('data:', data);
 		    var sheets = google.sheets('v4');
-		    var owner = (data.owner)?"YES":""; 
-		    var area27 = (data.area27)?"YES":""; 
-	            sheets.spreadsheets.values.update({
+			console.log('object.values:', Object.values(data));
+	            sheets.spreadsheets.values.append({
                         auth: auth,
                         spreadsheetId: '1vkuS3DgGbZGqWSz9-qF-tjxNQxPBPGKigmfASAfTgEk',
                         range: range,
+			//majorDimension: 'ROWS',
+			insertDataOption: 'INSERT_ROWS',
                         valueInputOption: 'USER_ENTERED',
-                        resource: {values: [[data.guest,data.guestEmail,data.guestPhone, owner, area27, data.notes, 'YES']]}
+                        resource: {values: [Object.values(data)]}
                      })/*.then((err, response) => {
                        var result = response.result;
                        console.log(`${result.updatedCells} cells updated.`);
@@ -180,6 +192,6 @@ function writeGuest(data, cb){
 
 module.exports = {
 	init: init,
-	listGuests: listGuests,
-        writeGuest: writeGuest
+	listLeads: listLeads,
+        writeLead: writeLead
 }

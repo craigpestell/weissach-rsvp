@@ -33,9 +33,9 @@ router.post('/post', function(req, res){
 
 router.get('/leads', function(req, res, next) {
     var qs = require('../leads');
-    qs.init(function(leads){
-
-        res.render('leads', { title: 'Leads', guests: leads });
+    qs.init(function(existingLeads){
+	var leads = existingLeads || [];
+        res.render('leads', { title: 'Leads', leads: leads });
     });
 });
 router.post('/leads/post', function(req, res){
@@ -43,9 +43,10 @@ router.post('/leads/post', function(req, res){
         console.log('req.body:', req.body);
     }
     var qs = require('../leads');
-    qs.writeGuest(req.body, function(){
-        qs.init(function(guests){
-            res.render('index', { title: 'RSVP', guests: guests });
+    qs.writeLead(req.body, function(){
+        qs.init(function(existingLeads){
+		var leads = existingLeads || [];
+            res.render('leads', { title: 'Leads', leads: leads });
         });
     });
 
